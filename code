@@ -1,0 +1,143 @@
+using System;
+using UnityEngine;
+
+public class Tutorial1 : MonoBehaviour
+{
+   Texture2D texture;
+    Color[] background;
+    Vector4[] points;
+    Matrix4x4 T = Matrix4x4.identity; // Fix the variable declaration
+
+    Matrix4x4 T1, T2, T3, R, S, M;
+    
+    public float speedX = 0.1f;
+    public float speedY = 0.05f;
+    // Start is called before the first frame update
+    void Start()
+    {
+        // This is not the best way to setup a full-screen quad
+        // but it is sufficient for our purposes
+        Camera.main.orthographic = true;
+        Camera.main.orthographicSize = 500;
+        Camera.main.rect = new Rect(0, 0, 1, 1);
+        
+        GameObject surface = GameObject.CreatePrimitive(PrimitiveType.Quad);
+        surface.transform.localPosition = new Vector3(0,0,0);
+        surface.transform.localRotation = Quaternion.identity;
+        surface.transform.localScale = new Vector3(1024, 768, 1);
+
+        texture = new Texture2D(1024, 768);
+        texture.filterMode = FilterMode.Point;
+        surface.GetComponent<Renderer>().material.shader = Shader.Find("Unlit/Texture");
+        surface.GetComponent<Renderer>().material.mainTexture = texture;
+        background = texture.GetPixels();
+
+        // ******
+        // Your Tutorial1 code here
+
+        
+
+        // ******
+            points = new Vector4[4];
+            points = new Vector4[4];
+points[0] = new Vector4(100, 100, 0, 1);
+points[1] = new Vector4(300, 100, 0, 1);
+points[2] = new Vector4(300, 300, 0, 1);
+points[3] = new Vector4(100, 300, 0, 1);
+
+            T3 = Matrix4x4.identity;
+
+
+
+        T3.SetRow(0, new Vector4(1,0,0,0.1f));
+        T3.SetRow(1,new Vector4(0,1,0,0.5f));
+        texture.Apply(); // DO NOT MOVE OR DELETE
+
+        
+        // lines below are for rotation like moving around with centre
+        
+    
+        /*
+        T1 = Matrix4x4.identity;
+        T1.SetRow(0,new Vector4(1,0,0,-500));
+        T1.SetRow(1, new Vector4(0,1,0,-400));
+
+        T1 = Matrix4x4.identity;
+        T1.SetRow(0,new Vector4(1,0,0,500));
+        T1.SetRow(1, new Vector4(0,1,0,400));
+        
+        R = Matrix4x4.identity;
+        R.SetRow(0, new Vector4(Mathf.Cos(1*Mathf.Deg2Rad),-Math.Sin(1*Mathf.Deg2Rad),0,0));
+        R.SetRow(1, new Vector4(Mathf.Sin(1*Mathf.Deg2Rad),Math.Cos(1*Mathf.Deg2Rad),0,0));
+
+        M = T2 * R * T1
+        */
+    }
+
+void DrawDDALine(int x1, int y1, int x2, int y2, Color c)
+{
+    int deltay = y2 - y1;
+    int deltax = x2 - x1;
+    int error = -deltax / 2;
+    int y = y1;
+
+    int ystep = (deltay > 0) ? 1 : -1; // Determine the direction to increment y
+    int xstep = (deltax > 0) ? 1 : -1; // Determine the direction to increment x
+
+    deltax = Mathf.Abs(deltax);
+    deltay = Mathf.Abs(deltay);
+
+    for (int x = x1; x != x2 + xstep; x += xstep)
+    {
+        texture.SetPixel(x, y, c);
+        error += deltay;
+
+        if (error > 0)
+        {
+            y += ystep;
+            error -= deltax;
+        }
+    }
+
+    texture.Apply();
+}
+
+
+
+
+    // Update is called once per frame
+    void Update()
+    {
+        // uncomment the following line for Tutorial2
+        texture.SetPixels(background); // DO NOT MOVE OR DELETE
+
+        // *******
+        // Your Tutorial2 code here
+        for (int i = 0; i < points.Length; i++)
+        {
+            points[i].x += speedX * Time.deltaTime; // Move in the x direction with speedX
+            //points[i].y += speedY * Time.deltaTime; // Move in the y direction with speedY
+        }
+
+
+
+// line below is for rotation around
+
+
+        for (int i = 0; i < points.Length; i++)
+    {
+        DrawDDALine(
+            Mathf.RoundToInt(points[i].x),
+            Mathf.RoundToInt(points[i].y), // Keep the y-coordinate fixed
+            Mathf.RoundToInt(points[(i + 1) % points.Length].x),
+            Mathf.RoundToInt(points[(i + 1) % points.Length].y), // Keep the y-coordinate fixed
+            Color.black);
+    }
+
+
+        // *******
+
+        // uncomment the following line for Tutorial2
+        texture.Apply(); // DO NOT MOVE OR DELETE
+    }
+}
