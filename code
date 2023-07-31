@@ -54,6 +54,15 @@ points[3] = new Vector4(100, 300, 0, 1);
         texture.Apply(); // DO NOT MOVE OR DELETE
 
         
+DrawDDALine(100, 0, 0, 110, Color.red);
+DrawDDALine(500, 25, 125, 115, Color.green);
+DrawDDALine(220, 20, 110, 170, Color.blue);
+
+DrawDDALine(100, 100, 200, 100, Color.cyan);
+
+
+
+
         // lines below are for rotation like moving around with centre
         
     
@@ -74,34 +83,50 @@ points[3] = new Vector4(100, 300, 0, 1);
         */
     }
 
-void DrawDDALine(int x1, int y1, int x2, int y2, Color c)
+void DrawDDALine(int x1, int y1, int x0, int y0, Color c)
 {
-    int deltay = y2 - y1;
-    int deltax = x2 - x1;
-    int error = -deltax / 2;
-    int y = y1;
-
-    int ystep = (deltay > 0) ? 1 : -1; // Determine the direction to increment y
-    int xstep = (deltax > 0) ? 1 : -1; // Determine the direction to increment x
-
-    deltax = Mathf.Abs(deltax);
-    deltay = Mathf.Abs(deltay);
-
-    for (int x = x1; x != x2 + xstep; x += xstep)
-    {
-        texture.SetPixel(x, y, c);
-        error += deltay;
-
-        if (error > 0)
-        {
-            y += ystep;
-            error -= deltax;
-        }
+ 
+    // Calculate dx and dy
+    int dx = x1 - x0;
+    int dy = y1 - y0;
+ 
+    int step;
+ 
+    // If dx > dy we will take step as dx
+    // else we will take step as dy to draw the complete
+    // line
+    if (Math.Abs(dx) > Math.Abs(dy))
+      step = Math.Abs(dx);
+    else
+      step = Math.Abs(dy);
+ 
+    // Calculate x-increment and y-increment for each
+    // step
+    float x_incr = (float)dx / step;
+    float y_incr = (float)dy / step;
+ 
+    // Take the initial points as x and y
+    float x = x0;
+    float y = y0;
+ 
+    for (int i = 0; i < step; i++) {
+ 
+      // putpixel(round(x), round(y), WHITE);
+      texture.SetPixel(Mathf.RoundToInt(x),Mathf.RoundToInt(y), c);
+      x += x_incr;
+      y += y_incr;
+      // delay(10);
     }
+  
+
 
     texture.Apply();
 }
 
+
+}
+
+/* code commented to check dda
 
 
 
@@ -141,3 +166,5 @@ void DrawDDALine(int x1, int y1, int x2, int y2, Color c)
         texture.Apply(); // DO NOT MOVE OR DELETE
     }
 }
+
+*/
