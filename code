@@ -54,11 +54,7 @@ points[3] = new Vector4(100, 300, 0, 1);
         texture.Apply(); // DO NOT MOVE OR DELETE
 
         
-DrawDDALine(100, 0, 0, 110, Color.red);
-DrawDDALine(500, 25, 125, 115, Color.green);
-DrawDDALine(220, 20, 110, 170, Color.blue);
 
-DrawDDALine(100, 100, 200, 100, Color.cyan);
 
 
 
@@ -124,9 +120,9 @@ void DrawDDALine(int x1, int y1, int x0, int y0, Color c)
 }
 
 
-}
 
-/* code commented to check dda
+
+
 
 
 
@@ -140,8 +136,8 @@ void DrawDDALine(int x1, int y1, int x0, int y0, Color c)
         // Your Tutorial2 code here
         for (int i = 0; i < points.Length; i++)
         {
-            points[i].x += speedX * Time.deltaTime; // Move in the x direction with speedX
-            //points[i].y += speedY * Time.deltaTime; // Move in the y direction with speedY
+            points[i].x += speedX * 50; // Move in the x direction with speedX
+            points[i].y += speedY * 10; // Move in the y direction with speedY
         }
 
 
@@ -167,4 +163,3 @@ void DrawDDALine(int x1, int y1, int x0, int y0, Color c)
     }
 }
 
-*/
